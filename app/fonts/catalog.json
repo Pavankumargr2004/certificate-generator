@@ -1,0 +1,160 @@
+[
+  {
+    "id": "dmsans",
+    "name": "DM Sans",
+    "category": "Sans serif",
+    "regular": "dmsans-regular.ttf",
+    "bold": "dmsans-bold.ttf"
+  },
+  {
+    "id": "sans",
+    "name": "Helvetica (built-in)",
+    "category": "Sans serif",
+    "builtin": "helvetica"
+  },
+  {
+    "id": "lato",
+    "name": "Lato",
+    "category": "Sans serif",
+    "regular": "lato-regular.ttf",
+    "bold": "lato-bold.ttf"
+  },
+  {
+    "id": "montserrat",
+    "name": "Montserrat",
+    "category": "Sans serif",
+    "regular": "montserrat-regular.ttf",
+    "bold": "montserrat-bold.ttf"
+  },
+  {
+    "id": "nunito",
+    "name": "Nunito",
+    "category": "Sans serif",
+    "regular": "nunito-regular.ttf",
+    "bold": "nunito-bold.ttf"
+  },
+  {
+    "id": "opensans",
+    "name": "Open Sans",
+    "category": "Sans serif",
+    "regular": "opensans-regular.ttf",
+    "bold": "opensans-bold.ttf"
+  },
+  {
+    "id": "poppins",
+    "name": "Poppins",
+    "category": "Sans serif",
+    "regular": "poppins-regular.ttf",
+    "bold": "poppins-bold.ttf"
+  },
+  {
+    "id": "raleway",
+    "name": "Raleway",
+    "category": "Sans serif",
+    "regular": "raleway-regular.ttf",
+    "bold": "raleway-bold.ttf"
+  },
+  {
+    "id": "roboto",
+    "name": "Roboto",
+    "category": "Sans serif",
+    "regular": "roboto-regular.ttf",
+    "bold": "roboto-bold.ttf"
+  },
+  {
+    "id": "sourcesans3",
+    "name": "Source Sans 3",
+    "category": "Sans serif",
+    "regular": "sourcesans3-regular.ttf",
+    "bold": "sourcesans3-bold.ttf"
+  },
+  {
+    "id": "cormorant",
+    "name": "Cormorant Garamond",
+    "category": "Serif",
+    "regular": "cormorantgaramond-variable.ttf",
+    "bold": "cormorantgaramond-bold.ttf"
+  },
+  {
+    "id": "crimsonpro",
+    "name": "Crimson Pro",
+    "category": "Serif",
+    "regular": "crimsonpro-variable.ttf",
+    "bold": "crimsonpro-bold.ttf"
+  },
+  {
+    "id": "librebaskerville",
+    "name": "Libre Baskerville",
+    "category": "Serif",
+    "regular": "librebaskerville-variable.ttf",
+    "bold": "librebaskerville-bold.ttf"
+  },
+  {
+    "id": "lora",
+    "name": "Lora",
+    "category": "Serif",
+    "regular": "lora-variable.ttf",
+    "bold": "lora-bold.ttf"
+  },
+  {
+    "id": "merriweather",
+    "name": "Merriweather",
+    "category": "Serif",
+    "regular": "merriweather-variable.ttf",
+    "bold": "merriweather-bold.ttf"
+  },
+  {
+    "id": "playfairdisplay",
+    "name": "Playfair Display",
+    "category": "Serif",
+    "regular": "playfairdisplay-variable.ttf",
+    "bold": "playfairdisplay-bold.ttf"
+  },
+  {
+    "id": "serif",
+    "name": "Times New Roman (built-in)",
+    "category": "Serif",
+    "builtin": "times"
+  },
+  {
+    "id": "oswald",
+    "name": "Oswald",
+    "category": "Display",
+    "regular": "oswald-regular.ttf",
+    "bold": "oswald-bold.ttf"
+  },
+  {
+    "id": "spacegrotesk",
+    "name": "Space Grotesk",
+    "category": "Display",
+    "regular": "spacegrotesk-regular.ttf",
+    "bold": "spacegrotesk-bold.ttf"
+  },
+  {
+    "id": "caveat",
+    "name": "Caveat",
+    "category": "Handwriting",
+    "regular": "caveat-variable.ttf",
+    "bold": "caveat-bold.ttf"
+  },
+  {
+    "id": "dancingscript",
+    "name": "Dancing Script",
+    "category": "Handwriting",
+    "regular": "dancingscript-variable.ttf",
+    "bold": "dancingscript-bold.ttf"
+  },
+  {
+    "id": "greatvibes",
+    "name": "Great Vibes",
+    "category": "Handwriting",
+    "regular": "greatvibes-regular.ttf",
+    "bold": "greatvibes-bold.ttf"
+  },
+  {
+    "id": "mono",
+    "name": "Courier (built-in)",
+    "category": "Monospace",
+    "builtin": "courier"
+  }
+]

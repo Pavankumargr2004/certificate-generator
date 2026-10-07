@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <title>Certflow — Bulk Certificate Studio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@8..144,100..1000&display=swap');
+    .template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.template-choice{border:1px solid #e2e8e3;background:#fff;border-radius:10px;padding:9px;text-align:left;color:var(--ink);transition:.15s}.template-choice:hover{border-color:#91c1b5;transform:translateY(-1px)}.template-choice.selected{border:1.5px solid var(--teal);box-shadow:0 0 0 3px #137b7014;background:#fbfffd}.template-art{height:58px;border-radius:6px;margin-bottom:8px;display:grid;place-items:center;overflow:hidden;background:#f8f8f3}.template-art.classic{border:3px double #b28b3d;color:#26364a;font:700 8px 'Google Sans Flex',sans-serif;letter-spacing:.7px}.template-art.modern{background:linear-gradient(#137b70 0 8px,#f3f8f6 8px);border-left:5px solid #137b70;color:#17353b;font:800 8px 'Google Sans Flex',sans-serif}.template-art.minimal{color:#354c61;background:linear-gradient(transparent 77%,#354c61 78%,#354c61 80%,transparent 81%);font:700 8px 'Google Sans Flex',sans-serif;letter-spacing:1px}.template-choice strong{font:700 11px 'Google Sans Flex',sans-serif;display:block}.template-choice small{font-size:9px;color:var(--muted);display:block;margin-top:3px}.template-choice.custom{display:flex;gap:9px;align-items:center;min-height:100px}.template-choice.custom .template-art{width:58px;flex-shrink:0;margin:0;background:#eaf4f0;color:var(--teal);font-size:18px}.upload-row{display:flex;gap:10px;align-items:center;margin-top:10px}.upload-button{border:1px solid #dce5df;background:#fff;color:var(--teal);border-radius:8px;padding:9px 11px;font-size:11px;font-weight:700}.upload-note{font-size:10px;line-height:1.4;color:#88958f}.template-label{font-size:12px;color:#526268;font-weight:700}.editor-grid{display:grid;grid-template-columns:1fr 125px;gap:12px;margin-top:16px}.color-field{display:flex;align-items:center;gap:9px;border:1px solid #dfe5e2;border-radius:9px;height:44px;padding:5px 9px}.color-field input{height:30px;width:38px;padding:2px;border:0;background:transparent;cursor:pointer}.color-field span{font:11px 'Google Sans Flex',sans-serif;color:#66746e}.preview-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px}.preview-button{background:#eff7f3;border:1px solid #d7e9e1;color:#176e61;border-radius:8px;padding:9px 12px;font-size:11px;font-weight:700}.preview-button:hover{background:#e2f3eb}.preview-note{font-size:10px;color:#82908a}.preview-frame{width:100%;height:240px;border:1px solid #e5eae6;border-radius:9px;background:#f6f7f4;margin-top:12px;display:none}.editor-label{font:700 12px 'Google Sans Flex',sans-serif;margin-top:18px;display:block}.editor-sub{font-size:10px;color:#82908a;margin-top:4px}.template-separator{height:1px;background:#edf0ed;margin:18px 0 16px}.upload-icon{font-size:21px}
+    :root{--ink:#182c35;--muted:#718087;--line:#e4e8e5;--paper:#fff;--canvas:#f5f6f2;--teal:#137b70;--teal-dark:#0d5e56;--mint:#e5f4ee;--gold:#d6a94d;--red:#b94d41;--red-bg:#fbefec;--shadow:0 16px 48px rgba(28,52,51,.07)}
+    *{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--ink);font:15px 'Google Sans Flex',sans-serif}button,input{font:inherit}button{cursor:pointer}.shell{max-width:1240px;margin:0 auto;padding:0 32px}.topbar{height:76px;border-bottom:1px solid #e6e9e4;background:rgba(255,255,255,.78);display:flex;align-items:center}.topinner{display:flex;align-items:center;justify-content:space-between;width:100%}.brand{display:flex;align-items:center;gap:11px;font:800 18px 'Google Sans Flex',sans-serif;letter-spacing:-.6px}.brandmark{height:34px;width:34px;border-radius:11px;background:var(--teal);color:white;display:grid;place-items:center;box-shadow:0 5px 12px #137b7033}.brandmark svg{width:20px;height:20px}.brand small{font:600 10px 'Google Sans Flex',sans-serif;letter-spacing:1.25px;color:#84918e;display:block;margin-top:1px}.topright{display:flex;align-items:center;gap:22px}.api-state{color:var(--muted);display:flex;gap:8px;align-items:center;font-size:13px}.dot{width:8px;height:8px;border-radius:50%;background:#27a77c;box-shadow:0 0 0 4px #27a77c19}.docslink{font-size:13px;color:var(--ink);text-decoration:none;font-weight:600}.hero{padding:50px 0 32px;display:flex;justify-content:space-between;align-items:flex-end}.eyebrow{font-size:11px;letter-spacing:1.7px;font-weight:700;color:var(--teal);text-transform:uppercase;margin-bottom:12px}.hero h1{font:700 clamp(30px,4vw,43px)/1.13 'Google Sans Flex',sans-serif;letter-spacing:-1.8px;margin:0}.hero p{color:var(--muted);margin:12px 0 0;line-height:1.6}.demo-btn{background:white;border:1px solid var(--line);border-radius:10px;padding:11px 15px;color:var(--ink);font-weight:600;box-shadow:0 3px 10px #152f2910}.demo-btn:hover{border-color:#9acbc0;background:#f9fffc}.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(340px,.8fr);gap:22px;align-items:start;padding-bottom:48px}.card{background:var(--paper);border:1px solid #e8ebe7;border-radius:16px;box-shadow:var(--shadow)}.form-card{padding:25px 27px}.cardhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:23px}.cardhead h2{font:700 17px 'Google Sans Flex',sans-serif;letter-spacing:-.35px;margin:0}.step{font-size:11px;color:var(--teal);background:var(--mint);padding:6px 10px;border-radius:20px;font-weight:700}.field{display:flex;flex-direction:column;gap:8px}.field label{font-size:12px;color:#526268;font-weight:700}.field input{border:1px solid #dfe5e2;border-radius:9px;background:#fff;height:44px;padding:0 12px;outline:none;color:var(--ink);transition:.15s}.field input:focus,.field select:focus{border-color:#48a394;box-shadow:0 0 0 3px #16827319}.field select{border:1px solid #dfe5e2;border-radius:9px;background:#fff;height:44px;padding:0 12px;outline:none;color:var(--ink);transition:.15s}.meta-fields{display:grid;grid-template-columns:1.4fr .8fr;gap:14px}.divider{height:1px;background:#edf0ed;margin:23px 0 20px}.recipient-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.recipient-head strong{font:700 13px 'Google Sans Flex',sans-serif}.muted{color:var(--muted);font-size:12px}.recipient-list{display:flex;flex-direction:column;gap:10px}.recipient{padding:14px;background:#fafbf9;border:1px solid #e9ede9;border-radius:11px;display:grid;grid-template-columns:1fr 1fr 1.05fr 32px;gap:10px;align-items:end}.recipient .field{gap:6px}.recipient .field label{font-size:10px;color:#7b8987}.recipient .field input{height:38px;font-size:13px;padding:0 9px}.remove{height:34px;width:32px;border:0;background:transparent;border-radius:8px;color:#9aa5a1;font-size:20px}.remove:hover{background:var(--red-bg);color:var(--red)}.add-btn{border:1px dashed #b8c9c3;border-radius:9px;background:transparent;color:var(--teal);padding:10px 12px;margin-top:11px;font-size:12px;font-weight:700;width:100%}.add-btn:hover{background:#f4fbf8;border-color:var(--teal)}.form-footer{display:flex;align-items:center;justify-content:space-between;margin-top:22px;gap:12px}.limit{color:#89958f;font-size:11px}.primary{background:var(--teal);color:#fff;border:0;border-radius:9px;padding:12px 17px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:9px;box-shadow:0 5px 12px #137b7025}.primary:hover{background:var(--teal-dark);transform:translateY(-1px)}.primary:disabled{opacity:.55;cursor:wait;transform:none}.primary svg{width:16px}.rightcol{display:flex;flex-direction:column;gap:16px}.progress-card{padding:24px}.progress-title{display:flex;justify-content:space-between;align-items:center}.progress-title h2{font:700 16px 'Google Sans Flex',sans-serif;margin:0}.status-pill{font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:800;padding:6px 9px;border-radius:18px;background:#eef1ef;color:#71807d}.status-pill.active{background:#e8f2ff;color:#4575a4}.status-pill.done{background:var(--mint);color:var(--teal)}.status-pill.error{background:var(--red-bg);color:var(--red)}.empty{padding:38px 10px 24px;text-align:center}.empty-icon{width:58px;height:58px;border-radius:18px;background:#f2f6f2;margin:0 auto 15px;display:grid;place-items:center;color:#6c968a}.empty-icon svg{width:28px;height:28px}.empty strong{display:block;font:700 13px 'Google Sans Flex',sans-serif}.empty p{font-size:12px;line-height:1.6;color:var(--muted);max-width:240px;margin:7px auto 0}.job-summary{padding-top:22px;display:none}.job-id{font:11px 'Google Sans Flex',sans-serif;color:#76847f;overflow-wrap:anywhere;margin-top:6px}.bar{height:7px;background:#edf0ed;border-radius:6px;overflow:hidden;margin:19px 0 16px}.bar span{height:100%;width:0;background:linear-gradient(90deg,#137b70,#50af94);display:block;transition:width .35s;border-radius:6px}.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.count{padding:11px 10px;background:#f8faf8;border-radius:9px}.count b{display:block;font:700 19px 'Google Sans Flex',sans-serif}.count span{font-size:10px;color:var(--muted);margin-top:3px;display:block}.results-card{padding:20px 22px;display:none}.results-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.results-top h3{font:700 14px 'Google Sans Flex',sans-serif;margin:0}.result-list{display:flex;flex-direction:column;gap:8px;max-height:350px;overflow:auto}.result{display:flex;justify-content:space-between;align-items:center;padding:11px 10px;border:1px solid #edf0ed;border-radius:9px;gap:10px}.result-name{font-size:12px;font-weight:700}.result-course{font-size:10px;color:var(--muted);margin-top:3px}.result-state{display:flex;align-items:center;gap:8px;flex-shrink:0}.badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--teal);background:var(--mint);padding:5px 7px;border-radius:20px}.badge.fail{color:var(--red);background:var(--red-bg)}.download{height:28px;width:29px;border:1px solid #e2e9e4;background:white;border-radius:7px;color:var(--teal);display:grid;place-items:center;text-decoration:none}.download svg{width:14px}.download:hover{background:var(--mint)}.alert{font-size:11px;color:var(--red);line-height:1.45;max-width:160px;text-align:right}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#203b3c;color:white;border-radius:9px;padding:12px 16px;font-size:12px;box-shadow:0 12px 35px #102a2a2b;transition:.25s;z-index:5}.toast.show{opacity:1;transform:translate(-50%,0)}.footer{color:#99a39e;font-size:11px;padding:0 0 25px;text-align:center}.spinner{width:14px;height:14px;border:2px solid #ffffff66;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.rightcol{display:grid;grid-template-columns:1fr 1fr}.results-card{grid-column:1/-1}.hero{padding-top:38px}}@media(max-width:650px){.shell{padding:0 16px}.topbar{height:64px}.topright{gap:12px}.api-state{font-size:0}.api-state .dot{font-size:initial}.hero{align-items:flex-start;gap:16px;flex-direction:column;padding:34px 0 24px}.layout{gap:14px}.form-card{padding:19px 16px}.meta-fields{grid-template-columns:1fr 1fr}.recipient{grid-template-columns:1fr 1fr 30px}.recipient .field:nth-child(3){grid-column:1/3}.recipient .remove{grid-column:3;grid-row:1}.rightcol{display:flex}.form-footer{align-items:flex-end}.limit{max-width:145px;line-height:1.4}.docslink{font-size:12px}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="shell topinner">
+    <div class="brand"><span class="brandmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3.8h7l4 4v12.4H7z"/><path d="M14 4v4h4M9.5 13h6M9.5 16h6M9.5 10h1"/><path d="m4.4 8.5.8 1.1 1.7-2"/></svg></span><span>certflow<small>BULK CERTIFICATE STUDIO</small></span></div>
+    <div class="topright"><div class="api-state"><span class="dot" id="healthDot"></span><span id="healthText">Checking API…</span></div><a class="docslink" href="/docs" target="_blank" rel="noreferrer">API docs ↗</a></div>
+  </div></header>
+  <main class="shell">
+    <section class="hero"><div><div class="eyebrow">Certificate operations</div><h1>Make every achievement<br>official.</h1><p>Generate polished certificates for your whole cohort in one batch.</p></div><button class="demo-btn" id="demoBtn">✦ &nbsp;Load sample batch</button></section>
+    <div class="layout">
+      <section class="card form-card">
+        <div class="cardhead"><h2>Set up your batch</h2><span class="step">01 &nbsp; DETAILS</span></div>
+        <form id="jobForm">
+          <div class="meta-fields">
+            <div class="field"><label for="eventName">Event or program name</label><input id="eventName" name="event_name" placeholder="e.g. Spring Leadership Academy" required maxlength="200"></div>
+            <div class="field"><label for="issuedOn">Issue date</label><input id="issuedOn" name="issued_on" type="date" required></div>
+          </div>
+          <div class="divider"></div>
+          <div class="template-label">Choose a certificate design</div>
+          <div id="templateGrid" class="template-grid">
+            <button type="button" class="template-choice selected" data-design="classic"><span class="template-art classic">CERTIFICATE</span><strong>Heritage</strong><small>Timeless double border</small></button>
+            <button type="button" class="template-choice" data-design="modern"><span class="template-art modern">CERTIFICATE</span><strong>Modern</strong><small>Bold and contemporary</small></button>
+            <button type="button" class="template-choice" data-design="minimal"><span class="template-art minimal">CERTIFICATE</span><strong>Minimal</strong><small>Quiet and refined</small></button>
+          </div>
+          <div class="upload-row"><button type="button" class="upload-button" id="uploadTemplateBtn">↑ &nbsp;Upload a template</button><input type="file" id="templateFile" accept="image/png,image/jpeg" hidden><span class="upload-note">Use your own PNG or JPG certificate background (up to 12 MB).</span></div>
+          <div class="template-separator"></div>
+          <span class="editor-label" style="margin-top:0">Personalize your certificate</span>
+          <div class="editor-sub">Edit the first certificate preview. These settings apply to every recipient.</div>
+          <div class="editor-grid"><div class="field"><label for="certificateTitle">CERTIFICATE HEADING</label><input id="certificateTitle" maxlength="120" value="CERTIFICATE OF COMPLETION"></div><div class="field"><label for="accentColor">ACCENT COLOR</label><div class="color-field"><input id="accentColor" type="color" value="#B28B3D"><span id="accentValue">#B28B3D</span></div></div></div>
+          <div class="field" style="margin-top:12px"><label for="certificateFont">CERTIFICATE FONT</label><select id="certificateFont"><option value="lora">Lora · Serif</option></select></div>
+          <div class="field" style="margin-top:12px"><label for="signatory">SIGNATORY (OPTIONAL)</label><input id="signatory" maxlength="120" placeholder="e.g. Director of Learning"></div>
+          <div class="preview-row"><button class="preview-button" type="button" id="previewBtn">Preview first recipient ↗</button><span class="preview-note" id="previewNote">Check the design before creating the batch.</span></div>
+          <iframe id="previewFrame" class="preview-frame" title="Certificate preview"></iframe>
+          <div class="divider"></div>
+          <div class="recipient-head"><strong>Recipients <span id="recipientCount" class="muted">(1)</span></strong><span class="muted">Name · course · email</span></div>
+          <div id="recipientList" class="recipient-list"></div>
+          <button type="button" class="add-btn" id="addRecipient">＋ &nbsp;Add another recipient</button>
+          <div class="form-footer"><span class="limit">Up to 1,000 recipients per batch · Invalid entries are reported individually.</span><button class="primary" id="submitBtn" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5"/></svg>Generate certificates</button></div>
+        </form>
+      </section>
+      <aside class="rightcol">
+        <section class="card progress-card">
+          <div class="progress-title"><h2>Batch progress</h2><span id="statusPill" class="status-pill">Ready</span></div>
+          <div id="emptyState" class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3.5h7l4 4v13H7z"/><path d="M14 4v4h4M9.5 13h6M9.5 16h4"/><circle cx="17.5" cy="17.5" r="3.2" fill="#f2f6f2"/><path d="m16.2 17.5 1 1 1.8-2"/></svg></div><strong>Your next batch starts here</strong><p>Submit recipient details to watch certificates generate and download them as they’re ready.</p></div>
+          <div id="jobSummary" class="job-summary"><div class="muted">JOB ID</div><div class="job-id" id="jobId">—</div><div class="bar"><span id="progressBar"></span></div><div class="counts"><div class="count"><b id="totalCount">0</b><span>Total</span></div><div class="count"><b id="successCount">0</b><span>Ready</span></div><div class="count"><b id="failedCount">0</b><span>Issues</span></div></div></div>
+        </section>
+        <section id="resultsCard" class="card results-card"><div class="results-top"><h3>Certificate results</h3><span class="muted" id="resultLabel"></span></div><div id="resultList" class="result-list"></div></section>
+      </aside>
+    </div>
+    <div class="footer">Designed for the moments worth celebrating.</div>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const list = $('recipientList');
+    let pollTimer = null;
+    let currentJob = null;
+    let selectedDesign = 'classic';
+    let selectedTemplateId = null;
+    let previewObjectUrl = null;
+    const savedJob = sessionStorage.getItem('certflow-job');
+    $('issuedOn').value = new Date().toISOString().slice(0, 10);
+
+    function toast(message) { const el = $('toast'); el.textContent = message; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2800); }
+    function recipientRow(data = {}) {
+      const row = document.createElement('div'); row.className = 'recipient';
+      row.innerHTML = `<div class="field"><label>RECIPIENT NAME</label><input name="name" maxlength="160" placeholder="Full name"></div><div class="field"><label>COURSE / ACHIEVEMENT</label><input name="course_name" maxlength="200" placeholder="Course or award"></div><div class="field"><label>EMAIL ADDRESS</label><input name="email" inputmode="email" maxlength="320" placeholder="name@example.com"></div><button type="button" class="remove" aria-label="Remove recipient">×</button>`;
+      row.querySelector('[name=name]').value = data.name || '';
+      row.querySelector('[name=course_name]').value = data.course_name || '';
+      row.querySelector('[name=email]').value = data.email || '';
+      row.querySelector('.remove').addEventListener('click', () => { if (list.children.length > 1) { row.remove(); updateCount(); } else toast('Keep at least one recipient in the batch.'); });
+      list.appendChild(row); updateCount();
+    }
+    function updateCount() { $('recipientCount').textContent = `(${list.children.length})`; }
+    $('addRecipient').addEventListener('click', () => recipientRow());
+    recipientRow();
+    $('templateGrid').addEventListener('click', event => {
+      const choice = event.target.closest('.template-choice'); if (!choice) return;
+      document.querySelectorAll('.template-choice').forEach(card => card.classList.remove('selected'));
+      choice.classList.add('selected'); selectedTemplateId = choice.dataset.template || null;
+      selectedDesign = choice.dataset.design || 'classic'; markPreviewDirty();
+    });
+    function markPreviewDirty() { $('previewFrame').style.opacity = '.45'; $('previewNote').textContent = 'Settings changed · preview again before generating.'; }
+    ['certificateTitle','accentColor','signatory'].forEach(id => $(id).addEventListener('input', () => {
+      if (id === 'accentColor') $('accentValue').textContent = $('accentColor').value.toUpperCase(); markPreviewDirty();
+    }));
+    $('certificateFont').addEventListener('change', markPreviewDirty);
+    $('uploadTemplateBtn').addEventListener('click', () => $('templateFile').click());
+    $('templateFile').addEventListener('change', async event => {
+      const file = event.target.files[0]; if (!file) return;
+      const name = file.name.replace(/\.[^.]+$/, '').slice(0, 120) || 'My certificate template';
+      const form = new FormData(); form.append('name', name); form.append('file', file);
+      $('uploadTemplateBtn').disabled = true; $('uploadTemplateBtn').textContent = 'Uploading…';
+      try {
+        const response = await request('/api/v1/templates', {method:'POST', body:form});
+        const template = await response.json();
+        addCustomTemplateCard(template); $('templateGrid').lastElementChild.click();
+        toast('Your template is ready to edit and preview.');
+      } catch (error) { toast(error.message); }
+      finally { $('uploadTemplateBtn').disabled = false; $('uploadTemplateBtn').innerHTML = '↑ &nbsp;Upload a template'; event.target.value = ''; }
+    });
+    function addCustomTemplateCard(template) {
+      const card = document.createElement('button'); card.type = 'button'; card.className = 'template-choice custom'; card.dataset.template = template.id;
+      card.innerHTML = '<span class="template-art">▧</span><span><strong></strong><small>Uploaded background</small></span>';
+      card.querySelector('strong').textContent = template.name; $('templateGrid').appendChild(card);
+    }
+    async function loadSavedTemplates() {
+      try { const response = await request('/api/v1/templates'); const data = await response.json();
+        for (const template of data.templates.filter(item => item.kind === 'uploaded')) addCustomTemplateCard(template);
+      } catch (error) { toast(`Templates could not be loaded: ${error.message}`); }
+    }
+    async function loadFontCatalog() {
+      try {
+        const response = await request('/api/v1/fonts'); const data = await response.json();
+        const select = $('certificateFont'); const selected = select.value || 'lora';
+        const groups = new Map();
+        for (const font of data.fonts) {
+          if (!groups.has(font.category)) { const group = document.createElement('optgroup'); group.label = font.category; groups.set(font.category, group); }
+          const option = document.createElement('option'); option.value = font.id; option.textContent = font.name; groups.get(font.category).appendChild(option);
+        }
+        select.replaceChildren(...groups.values());
+        select.value = data.fonts.some(font => font.id === selected) ? selected : 'lora';
+      } catch (error) { toast(`Font choices could not be loaded: ${error.message}`); }
+    }
+    $('accentValue').textContent = $('accentColor').value.toUpperCase();
+    $('previewBtn').addEventListener('click', async () => {
+      const first = list.firstElementChild;
+      if (!first) { toast('Add a recipient to preview the certificate.'); return; }
+      const recipient = Object.fromEntries([...first.querySelectorAll('input')].map(input => [input.name, input.value.trim()]));
+      const payload = {event_name:$('eventName').value.trim(),issued_on:$('issuedOn').value,recipient,
+        design:selectedDesign,template_id:selectedTemplateId,title_text:$('certificateTitle').value.trim(),
+        accent_color:$('accentColor').value,signatory:$('signatory').value.trim(),font_family:$('certificateFont').value};
+      if (!payload.event_name || !payload.issued_on) { toast('Enter the event name and issue date first.'); return; }
+      $('previewBtn').disabled = true; $('previewBtn').textContent = 'Preparing preview…';
+      try {
+        const response = await request('/api/v1/certificates/preview', {method:'POST',body:JSON.stringify(payload)});
+        const blob = await response.blob(); if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+        previewObjectUrl = URL.createObjectURL(blob); $('previewFrame').src = previewObjectUrl;
+        $('previewFrame').style.display = 'block'; $('previewFrame').style.opacity = '1';
+        $('previewNote').textContent = `Preview for ${recipient.name || 'first recipient'} · applied to the batch.`;
+      } catch (error) { toast(error.message); }
+      finally { $('previewBtn').disabled = false; $('previewBtn').textContent = 'Preview first recipient ↗'; }
+    });
+    $('demoBtn').addEventListener('click', () => {
+      $('eventName').value = 'Production Demo Course';
+      $('issuedOn').value = new Date().toISOString().slice(0, 10);
+      list.replaceChildren();
+      recipientRow({name:'Ada Lovelace',course_name:'Python Fundamentals',email:'ada@example.com'});
+      recipientRow({name:'Grace Hopper',course_name:'Systems Engineering',email:'grace@example.com'});
+      recipientRow({name:'Invalid Demo Recipient',course_name:'',email:'invalid'});
+      toast('Sample batch loaded — includes one invalid recipient.');
+    });
+    async function request(url, options = {}) {
+      const headers = new Headers(options.headers || {});
+      if (options.body && !(options.body instanceof FormData)) headers.set('Content-Type', 'application/json');
+      const response = await fetch(url, {...options, headers, credentials:'same-origin'});
+      if (!response.ok) { const problem = await response.json().catch(() => ({})); throw new Error(problem.detail || `Request failed (${response.status})`); }
+      return response;
+    }
+    async function checkHealth() {
+      try { const response = await fetch('/ready'); if (!response.ok) throw new Error(); $('healthText').textContent = 'API connected'; $('healthDot').style.background = '#27a77c'; }
+      catch { $('healthText').textContent = 'API unavailable'; $('healthDot').style.background = '#c65c4d'; }
+    }
+    checkHealth();
+    loadFontCatalog();
+    loadSavedTemplates();
+    if (savedJob) refreshJob(savedJob).catch(() => sessionStorage.removeItem('certflow-job'));
+    function setStatus(status) {
+      const pill = $('statusPill'); pill.textContent = status.replaceAll('_', ' '); pill.className = 'status-pill';
+      if (status === 'queued' || status === 'processing') pill.classList.add('active');
+      if (status === 'completed') pill.classList.add('done');
+      if (status === 'completed_with_errors') pill.classList.add('error');
+    }
+    function renderJob(job) {
+      currentJob = job; sessionStorage.setItem('certflow-job', job.id);
+      $('emptyState').style.display = 'none'; $('jobSummary').style.display = 'block'; $('resultsCard').style.display = 'block';
+      $('jobId').textContent = job.id; $('totalCount').textContent = job.total; $('successCount').textContent = job.succeeded; $('failedCount').textContent = job.failed;
+      $('progressBar').style.width = `${job.progress_percent}%`; setStatus(job.status);
+      $('resultLabel').textContent = `${job.certificates.length} recipients`;
+      const resultList = $('resultList'); resultList.replaceChildren();
+      for (const person of job.certificates) {
+        const row = document.createElement('div'); row.className = 'result';
+        const details = document.createElement('div');
+        const name = document.createElement('div'); name.className = 'result-name'; name.textContent = person.recipient_name || 'Invalid recipient';
+        const course = document.createElement('div'); course.className = 'result-course'; course.textContent = person.course_name || person.error || 'Certificate';
+        details.append(name, course);
+        const state = document.createElement('div'); state.className = 'result-state';
+        const badge = document.createElement('span'); badge.className = `badge ${person.status === 'failed' ? 'fail' : ''}`; badge.textContent = person.status;
+        state.appendChild(badge);
+        if (person.download_url) { const download = document.createElement('a'); download.className = 'download'; download.href = person.download_url; download.title = 'Download PDF'; download.setAttribute('aria-label', `Download ${person.recipient_name}'s certificate`); download.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v4h14v-4"/></svg>'; state.appendChild(download); }
+        if (person.error) { const error = document.createElement('span'); error.className = 'alert'; error.textContent = person.error; state.appendChild(error); }
+        row.append(details, state); resultList.appendChild(row);
+      }
+    }
+    async function refreshJob(id) {
+      const response = await request(`/api/v1/certificate-jobs/${encodeURIComponent(id)}`);
+      const job = await response.json(); renderJob(job);
+      if (job.status === 'queued' || job.status === 'processing') pollTimer = setTimeout(() => refreshJob(id).catch(err => toast(err.message)), 650);
+      else { $('submitBtn').disabled = false; $('submitBtn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5"/></svg>Generate certificates'; toast(job.status === 'completed' ? 'All certificates are ready.' : 'Batch finished — review recipient issues.'); }
+    }
+    $('jobForm').addEventListener('submit', async event => {
+      event.preventDefault(); if (!$('jobForm').reportValidity()) return;
+      if (list.children.length > 1000) { toast('A batch can contain at most 1,000 recipients.'); return; }
+      if (pollTimer) clearTimeout(pollTimer);
+      const recipients = [...list.children].map(row => Object.fromEntries([...row.querySelectorAll('input')].map(input => [input.name, input.value.trim()])));
+      const payload = {event_name:$('eventName').value.trim(),issued_on:$('issuedOn').value,recipients,
+        design:selectedDesign,template_id:selectedTemplateId,title_text:$('certificateTitle').value.trim(),
+        accent_color:$('accentColor').value,signatory:$('signatory').value.trim(),font_family:$('certificateFont').value};
+      $('submitBtn').disabled = true; $('submitBtn').innerHTML = '<span class="spinner"></span> Creating batch…';
+      try { const response = await request('/api/v1/certificate-jobs', {method:'POST',body:JSON.stringify(payload)}); const job = await response.json(); renderJob(job); if (job.status === 'queued' || job.status === 'processing') { $('submitBtn').innerHTML = '<span class="spinner"></span> Generating…'; pollTimer = setTimeout(() => refreshJob(job.id).catch(err => toast(err.message)), 500); } else { $('submitBtn').disabled = false; $('submitBtn').innerHTML = 'Generate certificates'; } }
+      catch (error) { $('submitBtn').disabled = false; $('submitBtn').innerHTML = 'Generate certificates'; toast(error.message); }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: certificates
+      POSTGRES_USER: certificates
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U certificates -d certificates"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  migrate:
+    build: .
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://certificates:${POSTGRES_PASSWORD}@db:5432/certificates
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build: .
+    environment:
+      APP_ENV: production
+      DATABASE_URL: postgresql+psycopg://certificates:${POSTGRES_PASSWORD}@db:5432/certificates
+      CERTIFICATE_OUTPUT_DIR: /app/data/certificates
+      MAX_RECIPIENTS_PER_JOB: ${MAX_RECIPIENTS_PER_JOB:-1000}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - certificates:/app/data/certificates
+      - templates:/app/data/templates
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: ["python", "-m", "app.worker"]
+    environment:
+      APP_ENV: production
+      DATABASE_URL: postgresql+psycopg://certificates:${POSTGRES_PASSWORD}@db:5432/certificates
+      CERTIFICATE_OUTPUT_DIR: /app/data/certificates
+      WORKER_POLL_SECONDS: ${WORKER_POLL_SECONDS:-1}
+      WORKER_LEASE_SECONDS: ${WORKER_LEASE_SECONDS:-300}
+    volumes:
+      - certificates:/app/data/certificates
+      - templates:/app/data/templates
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  certificates:
+  templates:
