@@ -24,6 +24,15 @@ services:
         condition: service_healthy
     restart: "no"
 
+  storage-init:
+    build: .
+    user: "0:0"
+    command: ["sh", "-c", "mkdir -p /app/data/certificates /app/data/templates && chown -R 10001:10001 /app/data/certificates /app/data/templates"]
+    volumes:
+      - certificates:/app/data/certificates
+      - templates:/app/data/templates
+    restart: "no"
+
   api:
     build: .
     environment:
@@ -31,6 +40,11 @@ services:
       DATABASE_URL: postgresql+psycopg://certificates:${POSTGRES_PASSWORD}@db:5432/certificates
       CERTIFICATE_OUTPUT_DIR: /app/data/certificates
       MAX_RECIPIENTS_PER_JOB: ${MAX_RECIPIENTS_PER_JOB:-1000}
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_APP_PASSWORD: ${SMTP_APP_PASSWORD:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-${SMTP_USERNAME:-}}
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
@@ -38,6 +52,8 @@ services:
       - templates:/app/data/templates
     depends_on:
       migrate:
+        condition: service_completed_successfully
+      storage-init:
         condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
@@ -55,6 +71,11 @@ services:
       CERTIFICATE_OUTPUT_DIR: /app/data/certificates
       WORKER_POLL_SECONDS: ${WORKER_POLL_SECONDS:-1}
       WORKER_LEASE_SECONDS: ${WORKER_LEASE_SECONDS:-300}
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_APP_PASSWORD: ${SMTP_APP_PASSWORD:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-${SMTP_USERNAME:-}}
     volumes:
       - certificates:/app/data/certificates
       - templates:/app/data/templates
