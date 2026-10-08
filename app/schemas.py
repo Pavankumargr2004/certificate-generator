@@ -20,6 +20,7 @@ class JobCreate(BaseModel):
     accent_color: str = "#B28B3D"
     signatory: str = Field(default="", max_length=120)
     font_family: str = "serif"
+    send_email: bool = False
 
     @field_validator("event_name")
     @classmethod
@@ -111,6 +112,8 @@ class CertificateResult(BaseModel):
     status: CertificateStatus
     error: str | None
     download_url: str | None
+    email_status: str
+    email_error: str | None
 
 
 class JobResult(BaseModel):
@@ -121,10 +124,14 @@ class JobResult(BaseModel):
     total: int
     succeeded: int
     failed: int
+    email_requested: bool
+    email_sent: int
+    email_failed: int
     progress_percent: float
     created_at: str
     started_at: str | None
     finished_at: str | None
+    download_zip_url: str
     certificates: list[CertificateResult]
 
 

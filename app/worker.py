@@ -10,6 +10,7 @@ from sqlalchemy import or_, select
 from .config import OUTPUT_DIR, WORKER_LEASE_SECONDS, WORKER_POLL_SECONDS
 from .database import Base, SessionLocal, engine
 from .generator import create_certificate
+from .mailer import send_certificate_email
 from .models import CertificateRecord, CertificateStatus, CertificateTemplate, GenerationJob, JobStatus
 from .schemas import RecipientInput
 
@@ -34,7 +35,7 @@ def process_one_job() -> bool:
         job.lease_expires_at = now + timedelta(seconds=WORKER_LEASE_SECONDS)
         db.commit()
         job_id, event_name, issued_on = job.id, job.event_name, job.issued_on
-        design, template_id = job.design, job.template_id
+        design, template_id, send_email = job.design, job.template_id, job.send_email
         title_text, accent_color, signatory = job.title_text, job.accent_color, job.signatory
         font_family = job.font_family
         template = db.get(CertificateTemplate, template_id) if template_id else None
@@ -62,10 +63,26 @@ def process_one_job() -> bool:
                                        font_family=font_family)
                     record.file_path = str(path)
                     record.status = CertificateStatus.succeeded
+                    if send_email:
+                        try:
+                            send_certificate_email(
+                                recipient_email=record.email, recipient_name=record.recipient_name,
+                                course_name=record.course_name, event_name=event_name,
+                                certificate_path=path,
+                            )
+                            record.email_status = "sent"
+                            record.email_error = None
+                        except Exception:
+                            logger.exception("Certificate email failed for record %s", record.id)
+                            record.email_status = "failed"
+                            record.email_error = "Email delivery failed; download the certificate and retry"
                 except Exception:
                     logger.exception("Certificate generation failed for record %s", record.id)
                     record.status = CertificateStatus.failed
                     record.error = "Certificate generation failed"
+                    if send_email:
+                        record.email_status = "not_sent"
+                        record.email_error = "Certificate generation failed"
             db.commit()
 
     with SessionLocal() as db:
@@ -75,7 +92,8 @@ def process_one_job() -> bool:
         records = list(db.scalars(select(CertificateRecord).where(CertificateRecord.job_id == job_id)))
         job.succeeded = sum(r.status == CertificateStatus.succeeded for r in records)
         job.failed = sum(r.status == CertificateStatus.failed for r in records)
-        job.status = JobStatus.completed_with_errors if job.failed else JobStatus.completed
+        email_failed = sum(r.email_status == "failed" for r in records)
+        job.status = JobStatus.completed_with_errors if job.failed or email_failed else JobStatus.completed
         job.finished_at = datetime.now(timezone.utc)
         job.lease_expires_at = None
         db.commit()
